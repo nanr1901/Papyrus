@@ -39,3 +39,13 @@
     transform: rotate(360deg);
   }
 }
+
+a{
+  text-decoration: none;
+  transition: 0.3s;
+  color: white;
+}
+
+a:hover{
+  color:  purple;
+}

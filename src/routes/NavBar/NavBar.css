@@ -36,7 +36,6 @@ body{
     padding:1.8rem 1rem;
     font-size: 1.5rem;
     width:100vh;
-    /* margin-left: -23rem; */
 }
 ul{
     list-style-type: none;
@@ -49,7 +48,6 @@ ul{
 }
 li{
     float:right;
-    /* display:block; */
     padding:2rem 2rem;
     width:25vh;
     text-decoration: none;

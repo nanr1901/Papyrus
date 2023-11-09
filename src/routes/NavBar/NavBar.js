@@ -2,9 +2,25 @@ import React from "react";
 import "./NavBar.css";
 import { Link } from 'react-router-dom';
 import logo from "./Components/logo1.png"
+import { useEffect, useContext, useState } from "react";
+import { UserContext } from '../../providers/User';
+
+const AuthComponent =()=>{
+  return(
+    <>
+    <li> <Link to="/login">Login</Link> </li>
+    <li> <Link to="/signup"> Sign Up</Link> </li>
+    </>
+  )
+}
+
+
 
 const NavBar=()=>{
-return(
+  const {token, setToken} = useContext(UserContext);
+
+
+  return(
   <div className="navbar">
   <div className="navbar-left">
   <div className="logo">
@@ -17,8 +33,10 @@ return(
   <li>
   <Link to="/">Home </Link>
   </li>
-  <li> Login </li>
-  <li>  Sign Up </li>
+  <li>
+    <Link to="/about">About us </Link>
+  </li>
+    {!token?<AuthComponent/>:<li style={{cursor : "pointer"}} onClick={() => {setToken(null)}}><a>Logout</a></li> }
 </ul>
 </div>
     </div>

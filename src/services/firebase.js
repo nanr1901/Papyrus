@@ -2,13 +2,11 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import * as firebase from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut} from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore"; 
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBXFesE3-ruPAzaS2FNC24tbhpMPWnkFyA",
   authDomain: "dbms-9e714.firebaseapp.com",
@@ -19,16 +17,16 @@ const firebaseConfig = {
   measurementId: "G-QNHYWCRS8E"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const db = getFirestore(app);
+
 
 export const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider()
 
 export const signInWithGoogle = () => {
-  signInWithPopup(auth,googleProvider).then((res) => {
-    console.log(res.user)
+  signInWithRedirect(auth,googleProvider).then((res) => {
+  
   }).catch((error) => {
     console.log(error.message)
   })
@@ -40,3 +38,10 @@ export const logOut = () => {
       console.log(error.message)
     })
   }
+
+  
+
+  // const querySnapshot = await getDocs(collection(db, "content"));
+  // querySnapshot.forEach((doc) => {
+  //   console.log(doc.data());
+  // });

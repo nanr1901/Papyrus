@@ -4,38 +4,34 @@ import Landing from "../Landing/Landing";
 import { BACKEND_URL } from "../../config/config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
 import { useContext } from "react";
 import User, { UserContext } from "../../providers/User";
 import { collection, getDocs } from "firebase/firestore"; 
 import {db} from "../../services/firebase"
-const Home=()=>
-{
 
-    const {token} = useContext(UserContext);    
-    const navigate = useNavigate();
-
+const AboutUs = ()=>{
+    let data = ""
     const getFireData = async() => {
         const querySnapshot = await getDocs(collection(db, "content"));
-        return querySnapshot[0].data();
+        querySnapshot.forEach((doc) => {
+            document.querySelector(".aboutus").textContent = doc.data().About;
+            console.log(doc.data().About);
+        });
     }
+
+    useEffect(()=>{
+        getFireData()
+    },[])
     
     return(
         <>
-       <NavBar/>
-       <Landing/>
-       <div style={{display : "flex", justifyContent : "center", alignItems : "center"}}>
-       {
-        token?      <><button className="btn-grad" onClick={() => {navigate("/askQ")}}>Ask questions</button>
-       <button className="btn-grad" onClick={() => {navigate("/seeQ")}}>See questions</button></> : <></>
-       }
+            <NavBar/>
+            <div className="aboutcard">
+            <h3>ABOUT US</h3>
+            <p className="aboutus" style={{color : "white"}}>Please Wait</p>
 
-       </div>
-       
-
+            </div>
         </>
-
-    );
+    )
 }
-
-export default Home;
+export default AboutUs

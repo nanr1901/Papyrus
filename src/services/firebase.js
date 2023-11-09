@@ -5,7 +5,7 @@ import * as firebase from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore"; 
-
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXFesE3-ruPAzaS2FNC24tbhpMPWnkFyA",
@@ -45,3 +45,35 @@ export const logOut = () => {
   // querySnapshot.forEach((doc) => {
   //   console.log(doc.data());
   // });
+
+  const messaging = getMessaging(app);
+
+  export const gettoken = () => {
+    return getToken(messaging, {
+      vapidKey: "BJl6Czog_bn9CeId8XZs5Gl0lSr-97-CtFjL3WMIjdZpNemMhxIN1KbyGg6OSMKly-gZo1wR5Dn1kDh3wImkiUE",
+    })
+      .then((currentToken) => {
+        if (currentToken) {
+          console.log(currentToken);
+          console.log("Token generated successfully ");
+          // Track the token -> client mapping, by sending to backend server
+          // show on the UI that permission is secured
+        } else {
+          console.log(
+            "No registration token available. Request permission to generate one."
+          );
+          // shows on the UI that permission is required
+        }
+      })
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
+        // catch error while creating client token
+      });
+  };
+  
+  export const onMessageListener = () =>
+    new Promise((resolve) => {
+      onMessage(messaging, (payload) => {
+        resolve(payload);
+      });
+    });

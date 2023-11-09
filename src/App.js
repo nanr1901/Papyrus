@@ -11,8 +11,16 @@ import SignUp from './routes/signUp';
 import Answers from './routes/Answers';
 import SeeQ from './routes/SeeQ/index';
 import AboutUs from './routes/About';
+import { gettoken,onMessageListener } from './services/firebase';
 
 function App() {
+  gettoken();
+
+  onMessageListener()
+    .then((payload) => {
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
   return (
     <div className='app-main'>
     <UserProvider>

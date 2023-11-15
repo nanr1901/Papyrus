@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore"; 
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyBXFesE3-ruPAzaS2FNC24tbhpMPWnkFyA",
   authDomain: "dbms-9e714.firebaseapp.com",
   projectId: "dbms-9e714",

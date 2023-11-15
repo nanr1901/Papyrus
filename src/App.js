@@ -10,6 +10,7 @@ import Login from './routes/Login/login';
 import SignUp from './routes/signUp';
 import Answers from './routes/Answers';
 import SeeQ from './routes/SeeQ/index';
+import UserQ from './routes/userQ/index';
 import AboutUs from './routes/About';
 import { gettoken,onMessageListener } from './services/firebase';
 
@@ -28,6 +29,7 @@ function App() {
        <Route path="/" element={<Home />} />
        <Route path="/profile" element={<Profile />}/>
        <Route path="/askQ" element={<AskQ/>}/>
+       <Route path="/userQ" element={<UserQ/>}/>
        <Route path="/searchAns" element={<SearchAns/>}/>
        <Route path="/glogin" element={<GLogin />}/>
        <Route path="/login" element={<Login />}/>

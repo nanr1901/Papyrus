@@ -27,7 +27,10 @@ const Home=()=>
        <div style={{display : "flex", justifyContent : "center", alignItems : "center"}}>
        {
         token?      <><button className="btn-grad" onClick={() => {navigate("/askQ")}}>Ask questions</button>
-       <button className="btn-grad" onClick={() => {navigate("/seeQ")}}>See questions</button></> : <></>
+       <button className="btn-grad" onClick={() => {navigate("/seeQ")}}>See questions</button> 
+       <button className="btn-grad" onClick={()=>{navigate("/userQ")}}>My Questions</button>
+       </>
+       : <></>
        }
 
        </div>

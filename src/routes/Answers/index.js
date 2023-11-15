@@ -3,8 +3,7 @@
 
 
 import axios from "axios";
-
-import { BACKEND_URL } from "../../config/config";
+import { BACKEND_URL, apiKey } from "../../config/config";
 import { useContext, useEffect, useState } from "react";
 import {Route, Link, Routes, useParams} from 'react-router-dom';
 import NavBar from "../NavBar/NavBar";
@@ -17,7 +16,34 @@ const Answers = () => {
 
     const id = params.id;
     const [question, setQuestion] = useState("Loading");
-    const [answers, setAnswers] = useState(["Answer1", "Answer2", "Answer3"]);
+    const [answers, setAnswers] = useState([{"answer" : {"answers" : "loading"}, "user" : "Loading"}]);
+    
+    const chatgpt = async () => {
+        try {
+          const apiKeys = apiKey;
+          const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKeys}`,
+            },
+            body: JSON.stringify({
+              prompt: prompt,
+              model: "gpt-3.5-turbo-1106",
+              max_tokens: 150,  // Adjust as needed
+            }),
+          };
+    
+          const response = await fetch(apiUrl, requestOptions);
+          const data = await response.json();
+          
+          console.log(data.choices[0].text.trim());
+        } catch (error) {
+          console.error('Error sending prompt to ChatGPT:', error);
+        }
+      };
 
     const getAnswers = async() => {
         try {
@@ -59,6 +85,7 @@ const Answers = () => {
     useEffect(() => {
         getQuestion();
         getAnswers();
+        chatgpt();
     },[])
 
     return(
@@ -71,10 +98,13 @@ const Answers = () => {
         <div className="answercover">
         {
             answers.map((e,ind) => (
-                
-                <h3 style={{color : "purple", backgroundColor:"lightgray",margin:4,padding:4, borderRadius:5}} key={ind}>{e.answers}</h3>
-            ))
+                <>
+                <h3 style={{color : "pink"}}>{e.user}</h3>
+                <h3 style={{color : "purple", backgroundColor:"lightgray",margin:4,padding:4, borderRadius:5}} key={ind}>{e["answer"]["answers"] }</h3>
+                </>
+))
         }   
+        {answers.length == 0 && <h3 style={{color : "pink", textAlign : "center"}}>No one answered your question </h3>}
         </div>
              
         <div className="answerbar">

@@ -12,7 +12,8 @@ const Question =()=>{
 
     const postQ = async() => {
         let details = document.querySelector(".question").value;
-        const res = await axios.post(BACKEND_URL + "/question/post",{questionDetails : details},{
+        let topic =  document.querySelector(".tags").value;
+        const res = await axios.post(BACKEND_URL + "/question/post",{questionDetails : details, topic : topic},{
             headers : {Authorization : token}
         });
         navigator("/seeQ")
@@ -24,6 +25,7 @@ const Question =()=>{
        <textarea name="paragraph_text" cols="70" rows="10" className="question" placeholder=" Post your question here!">
       
        </textarea>
+       <input type="text" className="tags" placeholder = "Type your tags separated with comma"></input>
         <button class='button-56' onClick={() => {postQ();}}>
             Post
         </button>

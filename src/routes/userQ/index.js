@@ -25,7 +25,9 @@ const UserQ=()=>
     }
     const getQuestion = async() => {
         try {
-            let res = await axios.get(BACKEND_URL + "/question/user",);
+            let res = await axios.get(BACKEND_URL + "/question/user",{
+                headers : {Authorization : token}
+            });
             setQuestions(res.data.questions);
             console.log(res.data.questions);
         }
@@ -55,6 +57,7 @@ const UserQ=()=>
             {filterQuestion.map((e,ind) => (
         <div className="qcard">
         <h3 key={ind} style={{color : "white", cursor : "pointer"}} onClick={() => {navigate("/answers/" + e.id + "/")}}>{e.details}</h3>
+        {e.status == "closed" && <h3 style={{color : "red"}}>Closed</h3>}
         </div>
        ))}
             </div>

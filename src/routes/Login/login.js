@@ -21,7 +21,7 @@ const Login = () => {
             let res = await axios.post(BACKEND_URL + "/login",{username : username, password : password});
             console.log(res.data);
             setToken(res.data);
-            
+            localStorage.setItem("username",username)
         }
         catch(err){
             
@@ -49,7 +49,6 @@ const Login = () => {
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Password"/>
 
-        
             <button onClick={loginHandle}>Submit</button>
         </div>
         </div>

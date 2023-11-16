@@ -21,6 +21,8 @@
           }
          
 .qcard{
+    display: flex;
+    justify-content: space-between;
     min-height: 5rem;
     background-color: rgba(255,255,255,0.2);
     margin: 1rem;
@@ -31,6 +33,13 @@
 .qcover{
     height: 80vh;
     overflow-y: auto;
+}
+
+.qbuttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 

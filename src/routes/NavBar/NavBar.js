@@ -1,11 +1,10 @@
 import React from "react";
 import "./NavBar.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from "./Components/logo1.png"
 import { useEffect, useContext, useState } from "react";
 import { UserContext } from '../../providers/User';
 import { notifications } from '@mantine/notifications';
-
 const AuthComponent =()=>{
   return(
     <>
@@ -19,8 +18,9 @@ const AuthComponent =()=>{
 
 const NavBar=()=>{
   const {token, setToken} = useContext(UserContext);
+  let user = localStorage.getItem("username")
 
-
+  const navigate = useNavigate();
   return(
   <div className="navbar">
   <div className="navbar-left">
@@ -37,10 +37,10 @@ const NavBar=()=>{
   <li>
     <Link to="/about">About us </Link>
   </li>
-    {!token?<AuthComponent/>:<li style={{cursor : "pointer"}} onClick={() => {setToken(null);notifications.show({
+    {!token?<AuthComponent/>:<><li style={{cursor : "pointer"}} onClick={() => {setToken(null);notifications.show({
                 title: "Success",
                 message: "Successfully logged out",
-            });}}><a>Logout</a></li> }
+            });navigate('/')}}><a>Logout</a></li><li>{user}</li></>}
 </ul>
 </div>
     </div>

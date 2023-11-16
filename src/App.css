@@ -49,3 +49,8 @@ a{
 a:hover{
   color:  purple;
 }
+
+::-webkit-scrollbar {
+  display: none;
+
+}

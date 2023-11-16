@@ -7,18 +7,38 @@ import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import { useContext } from "react";
 import User, { UserContext } from "../../providers/User";
-import { collection, getDocs } from "firebase/firestore"; 
+import { collection, getDocs, updateDoc } from "firebase/firestore"; 
 import {db} from "../../services/firebase"
+
 const Home=()=>
 {
 
     const {token} = useContext(UserContext);    
     const navigate = useNavigate();
 
-    const getFireData = async() => {
-        const querySnapshot = await getDocs(collection(db, "content"));
-        return querySnapshot[0].data();
+    const updateView = async() => {
+        try {
+            const querySnapshot = await getDocs(collection(db, "viewCount"));
+            console.log(querySnapshot.query);
+            let view;
+            querySnapshot.forEach((e) => {
+                view = e.data().Count;
+                console.log(view);
+            })
+
+            const docRef = await updateDoc(collection(db, "viewCount"), {
+              count : view + 1
+            });
+            
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     }
+
+    useEffect(() => {
+        updateView();
+    },[])
+      
     
     return(
         <>

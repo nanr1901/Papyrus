@@ -5,7 +5,7 @@
 import axios from "axios";
 import { BACKEND_URL, apiKey } from "../../config/config";
 import { useContext, useEffect, useState } from "react";
-import {Route, Link, Routes, useParams} from 'react-router-dom';
+import {Route, Link, Routes, useParams, useNavigate} from 'react-router-dom';
 import NavBar from "../NavBar/NavBar";
 import { UserContext } from "../../providers/User";
 
@@ -13,7 +13,7 @@ const Answers = () => {
 
     const params = useParams();
     const {token, setToken} = useContext(UserContext);
-
+    const navigate = useNavigate();
     const id = params.id;
     const [question, setQuestion] = useState("Loading");
     const [answers, setAnswers] = useState([{"answer" : {"answers" : "loading"}, "user" : "Loading"}]);
@@ -93,6 +93,7 @@ const Answers = () => {
         <NavBar/>
         <div className="qcard">
         <h1 style={{color : "white"}}>{question}</h1>
+        <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
 
         </div>
         <div className="answercover">

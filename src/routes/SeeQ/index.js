@@ -62,6 +62,8 @@ const SeeQ=()=>
     return(
         <>
             <NavBar/>
+            <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
+
             <div className="qcover">
             <div className="SearchBar">
                 <input className="SearchBarBar" placeholder="Search Question" onChange={(e)=>{setSearch(e.target.value);console.log(search)}}></input>

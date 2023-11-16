@@ -39,6 +39,7 @@ const Login = () => {
     return(
         <>
         <h1 style={{color : "white", textAlign : "center", marginTop : "2rem"}}>Login</h1>
+        <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
 
         <div className="logindiv">
         <div className="LoginForm">

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import logo from "./Components/logo1.png"
 import { useEffect, useContext, useState } from "react";
 import { UserContext } from '../../providers/User';
+import { notifications } from '@mantine/notifications';
 
 const AuthComponent =()=>{
   return(
@@ -36,7 +37,10 @@ const NavBar=()=>{
   <li>
     <Link to="/about">About us </Link>
   </li>
-    {!token?<AuthComponent/>:<li style={{cursor : "pointer"}} onClick={() => {setToken(null)}}><a>Logout</a></li> }
+    {!token?<AuthComponent/>:<li style={{cursor : "pointer"}} onClick={() => {setToken(null);notifications.show({
+                title: "Success",
+                message: "Successfully logged out",
+            });}}><a>Logout</a></li> }
 </ul>
 </div>
     </div>

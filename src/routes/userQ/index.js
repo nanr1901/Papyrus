@@ -62,6 +62,11 @@ const UserQ=()=>
             </div>
             {filterQuestion.map((e,ind) => (
         <div className="qcard">
+        { e.topic?.split(",").map((e) => (
+            <>
+            <span style={{color : "white", backgroundColor : 'purple', padding : "0rem 1rem", borderRadius : "1rem", marginLeft : "0.2rem", marginRight : "0.2rem"}}>{e}</span>
+</>
+        ))}
         <h3 key={ind} style={{color : "white", cursor : "pointer"}} onClick={() => {navigate("/answers/" + e.id + "/")}}>{e.details}</h3>
         {e.status == "closed" && <h3 style={{color : "red"}}>Closed</h3>}
         </div>

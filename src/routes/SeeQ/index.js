@@ -15,7 +15,7 @@ const SeeQ=()=>
     const { token, setToken } = useContext(UserContext);
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([{details : "Loading"}]);
-
+    const [tag, settag] = useState();
     useEffect(() => {
         if(!token){
             navigate("/login");
@@ -51,7 +51,7 @@ const SeeQ=()=>
         catch(err){
             notifications.show({
                 title: "Error",
-                message: "Something went wrong",
+                message: "You are not an admin",
                 color: 'red',
             })
         }
@@ -66,7 +66,7 @@ const SeeQ=()=>
     let filterQuestion = []
     console.log(questions)
     if(questions != undefined){
-        filterQuestion = questions.filter(x=>x.details.includes(search) && x.status == "open");
+        filterQuestion = questions.filter(x=>x.details.includes(search) && x.status == "open" && (!tag || x.topic.includes(tag)));
     }
     return(
         <>
@@ -76,7 +76,10 @@ const SeeQ=()=>
             <div className="qcover">
             <div className="SearchBar">
                 <input className="SearchBarBar" placeholder="Search Question" onChange={(e)=>{setSearch(e.target.value);console.log(search)}}></input>
+                <input className="SearchBarBar" placeholder="Search Question by TAG" onChange={(e)=>{settag(e.target.value);console.log(search)}}></input>
+
             </div>
+            
             {filterQuestion.map((e,ind) => (
         <div className="qcard">
         <h3 style={{color : "red", position : "relative", left : "35rem", display :"inline-block", cursor : "pointer"}} onClick={() => {closeQuestion(e.id)}}>Close</h3>

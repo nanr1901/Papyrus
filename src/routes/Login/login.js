@@ -9,6 +9,7 @@ import { BACKEND_URL } from "../../config/config";
 import { useContext, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../../providers/User";
+import { notifications } from '@mantine/notifications';
 
 const Login = () => {
 
@@ -19,12 +20,19 @@ const Login = () => {
             let username = document.querySelector("#username").value;
             let password = document.querySelector("#password").value;
             let res = await axios.post(BACKEND_URL + "/login",{username : username, password : password});
-            console.log(res.data);
+            notifications.show({
+                title: "Success",
+                message: "login Successfuly",
+            })
             setToken(res.data);
-            
+            localStorage.setItem("username",username)
         }
         catch(err){
-            
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
 
     }
@@ -39,6 +47,7 @@ const Login = () => {
     return(
         <>
         <h1 style={{color : "white", textAlign : "center", marginTop : "2rem"}}>Login</h1>
+        <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
 
         <div className="logindiv">
         <div className="LoginForm">
@@ -48,7 +57,6 @@ const Login = () => {
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Password"/>
 
-        
             <button onClick={loginHandle}>Submit</button>
         </div>
         </div>

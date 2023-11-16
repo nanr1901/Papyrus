@@ -5,6 +5,7 @@ import { UserContext } from "../../providers/User";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../../config/config";
+import { notifications } from '@mantine/notifications';
 
 import { useState } from "react";
 
@@ -13,7 +14,7 @@ const UserQ=()=>
 
     const { token, setToken } = useContext(UserContext);
     const navigate = useNavigate();
-    const [questions, setQuestions] = useState([{details : "Loading"}]);
+    const [questions, setQuestions] = useState([{details : "NO Questions "}]);
 
     useEffect(() => {
         if(!token){
@@ -32,7 +33,11 @@ const UserQ=()=>
             console.log(res.data.questions);
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 

@@ -5,6 +5,7 @@ import { UserContext } from "../../providers/User";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../../config/config";
+import { notifications } from '@mantine/notifications';
 
 import { useState } from "react";
 
@@ -30,7 +31,11 @@ const SeeQ=()=>
             console.log(res.data.questions);
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -44,7 +49,11 @@ const SeeQ=()=>
             getQuestion();
         }
         catch(err){
-            console.log(err);
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 

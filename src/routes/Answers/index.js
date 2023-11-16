@@ -9,6 +9,8 @@ import {Route, Link, Routes, useParams, useNavigate} from 'react-router-dom';
 import NavBar from "../NavBar/NavBar";
 import { UserContext } from "../../providers/User";
 import { setUserId } from "firebase/analytics";
+import { notifications } from '@mantine/notifications';
+
 
 const Answers = () => {
 
@@ -20,12 +22,13 @@ const Answers = () => {
     const [votes, setVotes] = useState(0)
     const [answers, setAnswers] = useState([{"answer" : {"answers" : "loading"}, "user" : "Loading"}]);
     const [updateId, setUpdateId] = useState(undefined)
+    const [updateind,setupdateind] = useState(0)
     const [userId, setUserId] = useState(-1)
     const navigator = useNavigate()
-    const editAnswerBar = (id) =>{
+    const editAnswerBar = (id,ind) =>{
         return (
             <div>
-                <span class="material-symbols-outlined" onClick={()=>{setUpdateId(id)}}>
+                <span class="material-symbols-outlined" onClick={()=>{setUpdateId(id); setupdateind(ind)}}>
                     edit
                 </span>
                 <span class="material-symbols-outlined" onClick={()=>{deleteAnswer(id)}}>
@@ -44,7 +47,11 @@ const Answers = () => {
             getAnswers()
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -83,11 +90,18 @@ const Answers = () => {
                 headers : {Authorization : token}}
             );
             console.log(res)
-            setAnswers(res.data.questions);
+            let a = res.data.questions;
+            a.sort(function(a,b){return b.answerDetails.voteCount - a.answerDetails.voteCount});
+            console.log(a);
+            setAnswers(a);
             setUpdateId(undefined);
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -100,7 +114,11 @@ const Answers = () => {
             console.log(res.data);
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -113,7 +131,11 @@ const Answers = () => {
             setUserId(res.data.user.username)
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -125,7 +147,11 @@ const Answers = () => {
             console.log(res)
             setVotes(votes+1)
         }catch(err){
-            console.log(err)
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -138,20 +164,31 @@ const Answers = () => {
             setVotes(votes-1)
 
         }catch(err){
-            console.log(err)
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
-    const updateAnswer = async() =>{
+    const updateAnswer = async(answerId) =>{
         try {
             let answerText = document.querySelector(".answer").value;
-            let res = await axios.patch(BACKEND_URL + "/question/answer",{answerId : id, details : answerText},{
+            let res = await axios.patch(BACKEND_URL + "/question/answer",{answerId : answerId, details : answerText},{
                 headers : {Authorization : token}}
             );
-            console.log(res.data);
+            notifications.show({
+                title: "Success",
+                message: "Updated successfully",
+            })
         }
         catch(err){
-            console.log("error");
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     } 
 
@@ -161,8 +198,16 @@ const Answers = () => {
                 headers : {Authorization : token}}
             );
             navigator("/")
+            notifications.show({
+                title: "Success",
+                message: "Successfuly Deleted",
+            })
         }catch(e){
-            console.log(e)
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
     }
 
@@ -176,21 +221,51 @@ const Answers = () => {
 
     if (updateId != undefined){
         return (
-            <div>                
-                <div className="answerbar">
-                    <textarea className="answer"></textarea>
+            <>
+                    <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
+            <h1 style={{color : 'white', textAlign : "center", marginTop : "2rem"}}>Edit Answer</h1>
+            <div style={{display : 'flex', justifyContent : "center", alignItems : "center", height : "100%"}}>                
+                <div style={{textAlign  : "center"}}>
+                    <textarea className="answer" style={{height : "20rem"}} defaultValue={answers[updateind].answer.answers}></textarea>
+                <button className="btn-grad" style={{marginLeft : "auto", marginRight : "auto"}} onClick={() => {updateAnswer(updateId);setUpdateId(undefined) ;setTimeout(() => {getAnswers()},300);}}>Edit Answer</button>
                 </div>
-                <button className="btn-grad" onClick={() => {updateAnswer(updateId);setUpdateId(undefined) ;setTimeout(() => {getAnswers()},300);}}>Post Answer</button>
             </div>
+            </>
 
         )
     }
     console.log(currentUser,userId)
+
+    const voteAnswer = async(e) => {
+        try{
+            let res = await axios.post(BACKEND_URL+"/question/voteAns",
+            {answerId : e},{
+                headers : {Authorization : token}})
+            console.log(res)
+            setTimeout(() => {        getAnswers();
+            },300);
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    const downvoteAnswer = async(e) => {
+        try{
+            let res = await axios.post(BACKEND_URL+"/question/downvoteAns",
+            {answerId : e},{
+                headers : {Authorization : token}})
+            console.log(res)
+            setTimeout(() => {        getAnswers();
+            },300);
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     return(
         <>
         <NavBar/>
-        <div className="qcard">
-            <h1 style={{color : "white"}}>{question}</h1>
+        <div className="voteBox">
             <p>Votes: {votes}</p>
             {currentUser == userId ? 
                     <span class="material-symbols-outlined" onClick={()=>{deleteQuestion(id)}}>
@@ -208,26 +283,44 @@ const Answers = () => {
                     </span>
                 </p>
             </div>
+            </div>
+        <div className="qcard">
             
-        <h1 style={{color : "white"}}>{question}</h1>
+            
+            
+        <h1 style={{color : "white", fontSize : "1.5rem"}}>{question}</h1>
         <button className="backbtn"  style={{position : "absolute", left : "2rem", top : "10rem"}} onClick={() => {navigate(-1)}}>BACK</button>
 
         </div>
         <div className="answercover">
         {answers&&
             answers.map((e,ind) => (
-                <div>
+                <div style={{backgroundColor : "rgba(255,255,255,0.1)", padding : "1rem", margin : "1rem", borderRadius : "1rem"}}>
                     <h3 style={{color : "pink"}}>{e.user} {currentUser == e.user ? 
-                        editAnswerBar(e.answerDetails.id): ""}</h3>
-                    <h3 style={{color : "purple", backgroundColor:"lightgray",margin:4,padding:4, borderRadius:5}} key={ind}>{e["answer"]["answers"] }</h3>
+                        editAnswerBar(e.answerDetails.id,ind): ""}</h3>
+                    <h3 style={{color : "purple", backgroundColor:"lightgray",margin:4,padding:4, borderRadius:5, fontSize : "1rem"}} key={ind}>{e["answer"]["answers"] }</h3>
+                    <div className="qbuttons">
+                <p onClick={()=>{voteAnswer(e.answerDetails?.id)}} style={{color : "white"}}>
+                    <span class="material-symbols-outlined">
+                        arrow_upward
+                    </span>
+                </p>
+                <p style={{color : "purple", position :"absolute", left : "23rem", fontSize : "2rem", paddingBottom : "5rem"}}>{e.answerDetails?.voteCount} </p>
+                <p onClick={()=>{downvoteAnswer(e.answerDetails?.id)}} style={{color : "white"}}>
+                    <span class="material-symbols-outlined">
+                        arrow_downward
+                    </span>
+                </p>
+            </div>
                 </div>
+                
 ))
         }   
         {answers.length == 0 && <h3 style={{color : "pink", textAlign : "center"}}>No one answered your question </h3>}
         </div>
              
         <div className="answerbar">
-        <textarea className="answer"></textarea>
+        <textarea className="answer" style={{paddingRight : "5rem"}}></textarea>
         <div>
         <button className="btn-grad" onClick={() => {postAnswer(); setTimeout(() => {getAnswers()},300);}}>Post Answer</button>
 

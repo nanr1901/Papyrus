@@ -13,13 +13,17 @@ import SeeQ from './routes/SeeQ/index';
 import UserQ from './routes/userQ/index';
 import AboutUs from './routes/About';
 import { gettoken,onMessageListener } from './services/firebase';
+import { notifications } from '@mantine/notifications';
 
 function App() {
   gettoken();
 
   onMessageListener()
     .then((payload) => {
-      console.log(payload);
+      notifications.show({
+        title: payload.notification.title,
+        message: payload.notification.body,
+      })
     })
     .catch((err) => console.log("failed: ", err));
   return (

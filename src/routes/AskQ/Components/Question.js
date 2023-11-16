@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../../../config/config";
 import { UserContext } from "../../../providers/User";
 import { useNavigate } from "react-router-dom";
 import { Textarea } from "@mantine/core";
+import { notifications } from '@mantine/notifications';
 
 const Question =()=>{
 
@@ -12,13 +13,26 @@ const Question =()=>{
     const navigator = useNavigate()
 
     const postQ = async() => {
-        let details = document.querySelector(".question").value;
-        let topic =  document.querySelector(".tags").value;
-        const res = await axios.post(BACKEND_URL + "/question/post",{questionDetails : details, topic : topic},{
-            headers : {Authorization : token}
-        });
-        navigator("/seeQ")
-        console.log(res);
+        try{
+            let details = document.querySelector(".question").value;
+            let topic =  document.querySelector(".tags").value;
+            const res = await axios.post(BACKEND_URL + "/question/post",{questionDetails : details, topic : topic},{
+                headers : {Authorization : token}
+            });
+            navigator("/seeQ")
+            notifications.show({
+                title: "Success",
+                message: "Successfully posted",
+            })
+        }
+        catch{
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
+        }
+        
     }
     const navigate = useNavigate()
     return (

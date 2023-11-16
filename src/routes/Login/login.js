@@ -9,6 +9,7 @@ import { BACKEND_URL } from "../../config/config";
 import { useContext, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../../providers/User";
+import { notifications } from '@mantine/notifications';
 
 const Login = () => {
 
@@ -19,12 +20,19 @@ const Login = () => {
             let username = document.querySelector("#username").value;
             let password = document.querySelector("#password").value;
             let res = await axios.post(BACKEND_URL + "/login",{username : username, password : password});
-            console.log(res.data);
+            notifications.show({
+                title: "Success",
+                message: "login Successfuly",
+            })
             setToken(res.data);
             localStorage.setItem("username",username)
         }
         catch(err){
-            
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
 
     }

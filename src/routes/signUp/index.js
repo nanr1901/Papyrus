@@ -7,6 +7,7 @@ import axios from "axios";
 
 import { BACKEND_URL } from "../../config/config";
 import { useNavigate } from "react-router-dom";
+import { notifications } from '@mantine/notifications';
 
 
 const SignUp = () => {
@@ -19,12 +20,19 @@ const SignUp = () => {
             let password = document.querySelector("#password").value;
             let name = document.querySelector("#name").value;
             let res = await axios.post(BACKEND_URL + "/signup",{username : username, password : password, name : name});
-            console.log(res.data);
+            notifications.show({
+                title: "Success",
+                message: res.data,
+            })
             navigator("/")
 
         }
         catch(err){
-
+            notifications.show({
+                title: "Error",
+                message: "Something went wrong",
+                color: 'red',
+            })
         }
 
     }
